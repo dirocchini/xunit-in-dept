@@ -1,4 +1,6 @@
 ﻿using System;
+using Bogus;
+using Domain.Courses;
 using Domain.UnitTest._builders;
 using Domain.UnitTest._toolbox;
 using ExpectedObjects;
@@ -17,11 +19,12 @@ namespace Domain.UnitTest.Courses
 
         public CourseTest()
         {
-            _name = "course 1";
-            _description = "new development course to TDD";
-            _workload = 80;
-            _audience = Audience.Student;
-            _value = 20;
+            var faker = new Faker();
+            _name = faker.Name.FullName();
+            _description = faker.Random.Words(5);
+            _workload = faker.Random.Double(1, 450);
+            _audience = Audience.Developer;
+            _value = faker.Random.Double(0, 1600);
         }
 
 
@@ -61,44 +64,9 @@ namespace Domain.UnitTest.Courses
         [Theory]
         [InlineData(0)]
         [InlineData(-5)]
-        public void course_should_not_have_value_less_than_one(double value)
+        public void course_should_not_have_value_less_than_zero(double value)
         {
-            Assert.Throws<ArgumentException>(() => new CourseBuilder().WithValue(value).Build()).WithMessage("Invalid Value");
-        }
-    }
-
-    public enum Audience
-    {
-        Student,
-        Developer,
-        Employee,
-        Director
-    }
-    public class Course
-    {
-        public string Name { get; private set; }
-        public string Description { get; private set; }
-        public double Workload { get; private set; }
-        public Audience Audience { get; private set; }
-        public double Value { get; private set; }
-
-        public Course(string name, string description, in double workload, Audience audience, in double value)
-        {
-            if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentException("Invalid Name");
-
-            if (workload <= 0)
-                throw new ArgumentException("Invalid Workload");
-
-            if (value <= 1)
-                throw new ArgumentException("Invalid Value");
-
-
-            Name = name;
-            Description = description;
-            Workload = workload;
-            Audience = audience;
-            Value = value;
+            Assert.Throws<ArgumentException>(() => new CourseBuilder().WithValue(value).Build()).WithMessage("Invalid Course Value");
         }
     }
 }

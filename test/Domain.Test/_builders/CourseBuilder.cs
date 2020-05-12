@@ -1,17 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using Bogus;
+using Domain.Courses;
 using Domain.UnitTest.Courses;
 
 namespace Domain.UnitTest._builders
 {
     public class CourseBuilder
     {
-        private string _name = "Course 1";
-        private string _description = "new development course to TDD";
-        private double _workload = 80;
+        private string _name = new Faker().Name.FullName();
+        private string _description = new Faker().Random.Words(5);
+        private double _workload = new Faker().Random.Double(1, 2000);
         private Audience _audience = Audience.Developer;
-        private double _value = 1600;
+        private double _value = new Faker().Random.Double(0, 2500);
 
 
 
@@ -52,7 +52,11 @@ namespace Domain.UnitTest._builders
 
         public Course Build()
         {
+
+
             return new Course(_name, _description, _workload, _audience, _value);
+
+            Console.WriteLine(_name);
         }
 
 
