@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
+using Domain.Test._toolbox;
 using ExpectedObjects;
 using Xunit;
 
@@ -37,7 +38,7 @@ namespace Domain.Test.Courses
                 Value = (double)20
             };
 
-            Assert.Throws<ArgumentException>(() => new Course(expectedCourse.Name, expectedCourse.Workload, expectedCourse.Audience, expectedCourse.Value));
+            Assert.Throws<ArgumentException>(() => new Course(expectedCourse.Name, expectedCourse.Workload, expectedCourse.Audience, expectedCourse.Value)).WithMessage($"Invalid Name");
         }
 
         [Theory]
@@ -53,7 +54,7 @@ namespace Domain.Test.Courses
                 Value = (double)20
             };
 
-            Assert.Throws<ArgumentException>(() => new Course(expectedCourse.Name, expectedCourse.Workload, expectedCourse.Audience, expectedCourse.Value));
+            Assert.Throws<ArgumentException>(() => new Course(expectedCourse.Name, expectedCourse.Workload, expectedCourse.Audience, expectedCourse.Value)).WithMessage($"Invalid Workload");
         }
 
 
@@ -70,9 +71,7 @@ namespace Domain.Test.Courses
                 Value = value
             };
 
-            var message  = Assert.Throws<ArgumentException>(() => new Course(expectedCourse.Name, expectedCourse.Workload, expectedCourse.Audience, expectedCourse.Value)).Message;
-            Assert.Equal("Invalid Value", message);
-
+            Assert.Throws<ArgumentException>(() => new Course(expectedCourse.Name, expectedCourse.Workload, expectedCourse.Audience, expectedCourse.Value)).WithMessage("Invalid Value");
         }
     }
 
