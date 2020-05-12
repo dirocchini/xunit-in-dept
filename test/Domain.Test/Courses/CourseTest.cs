@@ -10,15 +10,30 @@ namespace Domain.Test.Courses
 {
     public class CourseTest
     {
+        private readonly string _name;
+        private readonly double _workload;
+        private readonly Audience _audience;
+        private readonly double _value;
+
+
+        public CourseTest()
+        {
+            _name = "course 1";
+            _workload = 80;
+            _audience = Audience.Student;
+            _value = 20;
+        }
+
+
         [Fact]
         public void course_should_create()
         {
             var expectedCourse = new
             {
-                Name = "course 1",
-                Workload = (double)80,
-                Audience = Audience.Student,
-                Value = (double)20
+                Name = _name,
+                Workload = _workload,
+                Audience = _audience,
+                Value = _value
             };
 
             var course = new Course(expectedCourse.Name, expectedCourse.Workload, expectedCourse.Audience, expectedCourse.Value);
@@ -30,15 +45,7 @@ namespace Domain.Test.Courses
         [InlineData(null)]
         public void course_name_should_not_be_empty_nor_null(string courseName)
         {
-            var expectedCourse = new
-            {
-                Name = courseName,
-                Workload = (double)80,
-                Audience = Audience.Student,
-                Value = (double)20
-            };
-
-            Assert.Throws<ArgumentException>(() => new Course(expectedCourse.Name, expectedCourse.Workload, expectedCourse.Audience, expectedCourse.Value)).WithMessage($"Invalid Name");
+            Assert.Throws<ArgumentException>(() => new Course(courseName, _workload,_audience,_value)).WithMessage($"Invalid Name");
         }
 
         [Theory]
@@ -46,15 +53,7 @@ namespace Domain.Test.Courses
         [InlineData(-5)]
         public void course_should_not_have_workload_less_than_one(double workload)
         {
-            var expectedCourse = new
-            {
-                Name = "course 1 ",
-                Workload = workload,
-                Audience = Audience.Student,
-                Value = (double)20
-            };
-
-            Assert.Throws<ArgumentException>(() => new Course(expectedCourse.Name, expectedCourse.Workload, expectedCourse.Audience, expectedCourse.Value)).WithMessage($"Invalid Workload");
+            Assert.Throws<ArgumentException>(() => new Course(_name, workload, _audience, _value)).WithMessage($"Invalid Workload");
         }
 
 
@@ -63,15 +62,7 @@ namespace Domain.Test.Courses
         [InlineData(-5)]
         public void course_should_not_have_value_less_than_one(double value)
         {
-            var expectedCourse = new
-            {
-                Name = "course 1 ",
-                Workload = (double)20,
-                Audience = Audience.Student,
-                Value = value
-            };
-
-            Assert.Throws<ArgumentException>(() => new Course(expectedCourse.Name, expectedCourse.Workload, expectedCourse.Audience, expectedCourse.Value)).WithMessage("Invalid Value");
+            Assert.Throws<ArgumentException>(() => new Course(_name, _workload, _audience, value)).WithMessage("Invalid Value");
         }
     }
 
