@@ -23,6 +23,57 @@ namespace Domain.Test.Courses
             var course = new Course(expectedCourse.Name, expectedCourse.Workload, expectedCourse.Audience, expectedCourse.Value);
             expectedCourse.ToExpectedObject().ShouldMatch(course);
         }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(null)]
+        public void course_name_should_not_be_empty_nor_null(string courseName)
+        {
+            var expectedCourse = new
+            {
+                Name = courseName,
+                Workload = (double)80,
+                Audience = Audience.Student,
+                Value = (double)20
+            };
+
+            Assert.Throws<ArgumentException>(() => new Course(expectedCourse.Name, expectedCourse.Workload, expectedCourse.Audience, expectedCourse.Value));
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-5)]
+        public void course_should_not_have_workload_less_than_one(double workload)
+        {
+            var expectedCourse = new
+            {
+                Name = "course 1 ",
+                Workload = workload,
+                Audience = Audience.Student,
+                Value = (double)20
+            };
+
+            Assert.Throws<ArgumentException>(() => new Course(expectedCourse.Name, expectedCourse.Workload, expectedCourse.Audience, expectedCourse.Value));
+        }
+
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-5)]
+        public void course_should_not_have_value_less_than_one(double value)
+        {
+            var expectedCourse = new
+            {
+                Name = "course 1 ",
+                Workload = (double)20,
+                Audience = Audience.Student,
+                Value = value
+            };
+
+            var message  = Assert.Throws<ArgumentException>(() => new Course(expectedCourse.Name, expectedCourse.Workload, expectedCourse.Audience, expectedCourse.Value)).Message;
+            Assert.Equal("Invalid Value", message);
+
+        }
     }
 
     public enum Audience
@@ -41,6 +92,16 @@ namespace Domain.Test.Courses
 
         public Course(string name, in double workload, Audience audience, in double value)
         {
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentException("Invalid Name");
+
+            if (workload <= 0)
+                throw new ArgumentException("Invalid Workload");
+
+            if (value <= 1)
+                throw new ArgumentException("Invalid Value");
+
+
             Name = name;
             Workload = workload;
             Audience = audience;
