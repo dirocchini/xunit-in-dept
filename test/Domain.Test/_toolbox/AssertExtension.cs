@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Reflection.Metadata;
-using System.Text;
 using Xunit;
 
-namespace Domain.Test._toolbox
+namespace Domain.UnitTest._toolbox
 {
     public static class AssertExtension
     {

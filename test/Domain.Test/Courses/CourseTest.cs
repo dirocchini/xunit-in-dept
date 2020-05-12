@@ -1,16 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
-using Domain.Test._toolbox;
+using Domain.UnitTest._builders;
+using Domain.UnitTest._toolbox;
 using ExpectedObjects;
 using Xunit;
 
-namespace Domain.Test.Courses
+namespace Domain.UnitTest.Courses
 {
     public class CourseTest
     {
         private readonly string _name;
+        private readonly string _description;
         private readonly double _workload;
         private readonly Audience _audience;
         private readonly double _value;
@@ -19,6 +18,7 @@ namespace Domain.Test.Courses
         public CourseTest()
         {
             _name = "course 1";
+            _description = "new development course to TDD";
             _workload = 80;
             _audience = Audience.Student;
             _value = 20;
@@ -31,12 +31,13 @@ namespace Domain.Test.Courses
             var expectedCourse = new
             {
                 Name = _name,
+                Description = _description,
                 Workload = _workload,
                 Audience = _audience,
                 Value = _value
             };
 
-            var course = new Course(expectedCourse.Name, expectedCourse.Workload, expectedCourse.Audience, expectedCourse.Value);
+            var course = new Course(expectedCourse.Name, _description, expectedCourse.Workload, expectedCourse.Audience, expectedCourse.Value);
             expectedCourse.ToExpectedObject().ShouldMatch(course);
         }
 
@@ -45,7 +46,7 @@ namespace Domain.Test.Courses
         [InlineData(null)]
         public void course_name_should_not_be_empty_nor_null(string courseName)
         {
-            Assert.Throws<ArgumentException>(() => new Course(courseName, _workload,_audience,_value)).WithMessage($"Invalid Name");
+            Assert.Throws<ArgumentException>(() => new CourseBuilder().WithName(courseName).Build());
         }
 
         [Theory]
@@ -53,7 +54,7 @@ namespace Domain.Test.Courses
         [InlineData(-5)]
         public void course_should_not_have_workload_less_than_one(double workload)
         {
-            Assert.Throws<ArgumentException>(() => new Course(_name, workload, _audience, _value)).WithMessage($"Invalid Workload");
+            Assert.Throws<ArgumentException>(() => new CourseBuilder().WithWorkload(workload).Build());
         }
 
 
@@ -62,7 +63,7 @@ namespace Domain.Test.Courses
         [InlineData(-5)]
         public void course_should_not_have_value_less_than_one(double value)
         {
-            Assert.Throws<ArgumentException>(() => new Course(_name, _workload, _audience, value)).WithMessage("Invalid Value");
+            Assert.Throws<ArgumentException>(() => new CourseBuilder().WithValue(value).Build()).WithMessage("Invalid Value");
         }
     }
 
@@ -76,11 +77,12 @@ namespace Domain.Test.Courses
     public class Course
     {
         public string Name { get; private set; }
+        public string Description { get; private set; }
         public double Workload { get; private set; }
         public Audience Audience { get; private set; }
         public double Value { get; private set; }
 
-        public Course(string name, in double workload, Audience audience, in double value)
+        public Course(string name, string description, in double workload, Audience audience, in double value)
         {
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentException("Invalid Name");
@@ -93,6 +95,7 @@ namespace Domain.Test.Courses
 
 
             Name = name;
+            Description = description;
             Workload = workload;
             Audience = audience;
             Value = value;
