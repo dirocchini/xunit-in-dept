@@ -13,8 +13,6 @@ namespace Domain.UnitTest._builders
         private Audience _audience = Audience.Developer;
         private double _value = new Faker().Random.Double(0, 2500);
 
-
-
         public static CourseBuilder New()
         {
             return new CourseBuilder();
@@ -52,11 +50,7 @@ namespace Domain.UnitTest._builders
 
         public Course Build()
         {
-
-
             return new Course(_name, _description, _workload, _audience, _value);
-
-            Console.WriteLine(_name);
         }
 
 

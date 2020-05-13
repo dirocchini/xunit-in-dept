@@ -10,7 +10,7 @@ namespace Domain.Courses
         public Audience Audience { get; private set; }
         public double Value { get; private set; }
 
-        public Course(string name, string description, in double workload, Audience audience, in double value)
+        public Course(string name, string description, double workload, Audience audience, double value)
         {
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentException("Invalid Name");
